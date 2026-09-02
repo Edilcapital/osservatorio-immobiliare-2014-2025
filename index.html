@@ -11,9 +11,13 @@
 <script>
 (async () => {
   try {
-    const res = await fetch('report.b64.txt');
-    if (!res.ok) throw new Error('fetch ' + res.status);
-    const b64 = (await res.text()).trim();
+    const names = Array.from({length: 13}, (_, i) => 'parts/p' + String(i).padStart(2,'0') + '.txt');
+    const texts = await Promise.all(names.map(async (n) => {
+      const res = await fetch(n);
+      if (!res.ok) throw new Error(n + ' ' + res.status);
+      return (await res.text()).trim();
+    }));
+    const b64 = texts.join('');
     const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
     const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
     const html = await new Response(stream).text();

@@ -1,1 +1,29 @@
-<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Analisi Mercato Immobiliare Italiano 2014-2025</title><script src="https://cdn.tailwindcss.com"></script><script src="https://cdn.jsdelivr.net/npm/chart.js"></script><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"><style>body{font-family:'Plus Jakarta Sans',sans-serif;background-color:#f8f7f4;color:#1e293b}.chart-container{position:relative;width:100%;max-width:650px;margin-left:auto;margin-right:auto;height:320px;max-height:380px}@media(min-width:768px){.chart-container{height:350px}}.nav-btn.active{background-color:#1e293b;color:#fff;box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}.tab-content{display:none}.tab-content.active{display:block}.card-shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.05)}</style></head><body class="min-h-screen flex flex-col"><p class="p-6">Caricamento report in corso. Apri il file originale se questa pagina e minima.</p></body></html>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osservatorio Mercato Immobiliare Italiano 2014-2025</title>
+<style>body{font-family:system-ui,sans-serif;background:#f8f7f4;color:#1e293b;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}#s{font-size:14px;color:#64748b}</style>
+</head>
+<body>
+<p id="s">Caricamento report…</p>
+<script>
+(async () => {
+  try {
+    const res = await fetch('report.b64.txt');
+    if (!res.ok) throw new Error('fetch ' + res.status);
+    const b64 = (await res.text()).trim();
+    const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html = await new Response(stream).text();
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (e) {
+    document.getElementById('s').textContent = 'Errore di caricamento: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>
